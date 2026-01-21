@@ -8,3 +8,40 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+model Receita {
+  id           String   @id @default(uuid())
+  nome         String
+  descricao    String?
+  modoPreparo  String   
+  rendimento   Float    
+  unidade      String   
+  
+  ingredientes ReceitaIngrediente[]
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Ingrediente {
+  id            String   @id @default(uuid())
+  nome          String   @unique
+  precoAtual    Float
+  unidadeMedida String   
+  
+  receitas      ReceitaIngrediente[]
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model ReceitaIngrediente {
+  id            String      @id @default(uuid())
+  
+  receita       Receita     @relation(fields: [receitaId], references: [id])
+  receitaId     String
+  
+  ingrediente   Ingrediente @relation(fields: [ingredienteId], references: [id])
+  ingredienteId String
+  
+  quantidade    Float       
+}
